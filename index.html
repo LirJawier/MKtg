@@ -18,75 +18,93 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            z-index: 0;
+        }
+
+        /* Затемнение фона */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
+            background: rgba(30, 30, 40, 0.7);
+            backdrop-filter: blur(15px);
             border-radius: 48px;
-            padding: 40px 30px;
+            padding: 30px 25px;
             max-width: 550px;
             width: 100%;
             text-align: center;
             box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
         }
 
         .title {
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 800;
             background: linear-gradient(135deg, #FFB6C1, #FF6B6B);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .sub {
-            font-size: 16px;
-            color: #b0c4de;
+            font-size: 14px;
+            color: #e0e0e0;
             margin-bottom: 25px;
         }
 
         .holiday-box {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 32px;
-            padding: 25px 20px;
-            margin-bottom: 20px;
-            min-height: 180px;
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 15px;
+            margin-bottom: 25px;
+            min-height: 150px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .holiday-name {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             color: #FFD966;
             word-break: break-word;
             line-height: 1.4;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .holiday-desc {
-            font-size: 14px;
-            color: #9cb8d4;
-            margin-top: 12px;
+            font-size: 13px;
+            color: #ddd;
         }
 
         .refresh-btn {
             background: #FF6B6B;
             border: none;
-            padding: 12px 28px;
-            border-radius: 60px;
+            padding: 10px 24px;
+            border-radius: 40px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             color: white;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .refresh-btn:hover {
@@ -94,10 +112,58 @@
             transform: scale(1.02);
         }
 
+        .avatars-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .avatar-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: transform 0.2s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e94560;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         .footer-note {
-            font-size: 10px;
-            color: #608aac;
-            margin-top: 20px;
+            font-size: 9px;
+            color: #ccc;
+            margin-top: 15px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
@@ -116,15 +182,27 @@
     <button class="refresh-btn" id="refreshBtn">
         <span>🎲</span> Другой праздник
     </button>
+
+    <div class="avatars-container" id="avatarsContainer"></div>
     <div class="footer-note">
-        📅 Ваш персональный календарь праздников
+        📅 Ваш календарь праздников
     </div>
 </div>
 
 <script>
-    // Полная база праздников
+    // ========== ВАША ФОНОВАЯ КАРТИНКА С GITHUB ==========
+    // 👇👇👇 ВСТАВЬТЕ ВАШУ ССЫЛКУ ЗДЕСЬ 👇👇👇
+    const MY_BACKGROUND = "https://raw.githubusercontent.com/MKtg/blob/main/C00tRE96HCIyorJfkpc3O2_7_N0-LdtdXyLsYzE3BOstMTuvNoZaqnqLR1EWRqNh14O50lq-l_BQvCXgaVBv0_Pa.jpg";
+    // ====================================================
+
+    // Устанавливаем фон
+    document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+
+    // База праздников
     const holidaysData = {
-        "18.05": [
+        "05.18": [
             "Международный день музеев",
             "Арина Капустница (Рассадница)",
             "Всемирный день вакцины против СПИДа",
@@ -135,48 +213,28 @@
             "День Розовой Пантеры",
             "День сырного суфле"
         ],
-        "19.05": [
-            "День пионерии",
-            "День рождения Кубика Рубика",
-            "Иов Горошник",
-            "День конной авиации",
-            "День подразделений служебно-боевой подготовки МВД РФ",
-            "День русской печи",
-            "День пищевой революции",
-            "День парусов на горизонте",
+        "05.19": [
+            "День пионерии", "День рождения Кубика Рубика", "Иов Горошник",
+            "День конной авиации", "День подразделений служебно-боевой подготовки МВД РФ",
+            "День русской печи", "День пищевой революции", "День парусов на горизонте",
             "Всемирный день борьбы с воспалительными заболеваниями кишечника",
-            "Всемирный день борьбы с гепатитом С",
-            "День торта «Devil`s Food Cake»"
+            "Всемирный день борьбы с гепатитом С", "День торта «Devil`s Food Cake»"
         ],
-        "20.05": [
-            "Всемирный день врача-травматолога",
-            "Всемирный день метрологии",
-            "День рождения джинсов",
-            "Купальница",
-            "Всемирный день пчел",
-            "День Волги",
-            "Европейский день моря",
-            "День миллионера",
-            "День собранной клубники",
-            "День ветряных вертушек",
-            "Праздник разливаний",
-            "День пирога «Киш Лорен»"
+        "05.20": [
+            "Всемирный день врача-травматолога", "Всемирный день метрологии",
+            "День рождения джинсов", "Купальница", "Всемирный день пчел",
+            "День Волги", "Европейский день моря", "День миллионера",
+            "День собранной клубники", "День ветряных вертушек",
+            "Праздник разливаний", "День пирога «Киш Лорен»"
         ],
-        "21.05": [
-            "День военного переводчика",
-            "День инвентаризатора (День работника БТИ)",
-            "День полярника",
-            "День Тихоокеанского флота ВМФ России",
-            "Вознесение Господне",
-            "День защиты от безработицы",
+        "05.21": [
+            "День военного переводчика", "День инвентаризатора (День работника БТИ)",
+            "День полярника", "День Тихоокеанского флота ВМФ России",
+            "Вознесение Господне", "День защиты от безработицы",
             "Всемирный день культурного разнообразия во имя диалога и развития",
-            "Международный день космоса",
-            "Иван Долгий",
-            "День работников культуры и искусства – Казахстан",
-            "День официантов и официанток",
-            "День музы и вдохновения",
-            "День обмена талисманами",
-            "День клубники со сливками"
+            "Международный день космоса", "Иван Долгий",
+            "День работников культуры и искусства – Казахстан", "День официантов и официанток",
+            "День музы и вдохновения", "День обмена талисманами", "День клубники со сливками"
         ]
     };
 
@@ -215,11 +273,40 @@
     function updateHoliday() {
         const contentDiv = document.getElementById('holidayContent');
         const holiday = getRandomHoliday();
-        
         contentDiv.innerHTML = `
             <div class="holiday-name">${escapeHtml(holiday.name)}</div>
             <div class="holiday-desc">${escapeHtml(holiday.description)}</div>
         `;
+    }
+
+    // Аватары
+    const contacts = ['@makoklyuy', '@sokolovpeter', '@oldti', '@RNFRI'];
+    
+    function getAvatarElement(username) {
+        const cleanName = username.replace('@', '');
+        const container = document.createElement('div');
+        container.className = 'avatar-circle';
+        
+        const img = document.createElement('img');
+        img.src = `https://unavatar.io/telegram/${cleanName}`;
+        img.alt = username;
+        img.onerror = () => {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'avatar-placeholder';
+            placeholder.textContent = cleanName[0] ? cleanName[0].toUpperCase() : '?';
+            container.innerHTML = '';
+            container.appendChild(placeholder);
+        };
+        container.appendChild(img);
+        return container;
+    }
+
+    function loadAvatars() {
+        const container = document.getElementById('avatarsContainer');
+        container.innerHTML = '';
+        contacts.forEach(contact => {
+            container.appendChild(getAvatarElement(contact));
+        });
     }
 
     function escapeHtml(text) {
@@ -230,10 +317,10 @@
     }
 
     // Запуск
+    loadAvatars();
     updateHoliday();
     document.getElementById('refreshBtn').addEventListener('click', updateHoliday);
 
-    // Telegram Web App
     if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
