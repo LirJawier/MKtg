@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Праздник дня — Ну..</title>
+    <title>Пивной праздник — Ну, за...</title>
     <style>
         * {
             margin: 0;
@@ -38,24 +38,51 @@
             z-index: -1;
         }
 
-        /* Основной контент */
+        /* Основной контент - используем flex для позиционирования */
         .content {
             position: relative;
             z-index: 2;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 85vh;
             max-width: 550px;
             width: 100%;
+        }
+
+        /* Верхний блок с заголовком — убираем отступы */
+        .top-block {
+            text-align: center;
+            width: 100%;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        /* Центральный блок с праздником */
+        .center-block {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        /* Нижний блок с кнопкой и аватарами */
+        .bottom-block {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .title {
             font-size: 72px;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFB6C1, #FF6B6B);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 30px;
+            color: #FFD966;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-top: 0;
+            padding-top: 0;
+            line-height: 1;
         }
 
         /* Подложка для праздников */
@@ -64,9 +91,10 @@
             backdrop-filter: blur(12px);
             border-radius: 40px;
             padding: 25px 20px;
-            margin-bottom: 30px;
+            width: 100%;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            text-align: center;
         }
 
         .holiday-name {
@@ -104,7 +132,6 @@
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
-            margin-top: 10px;
         }
 
         .avatar-circle {
@@ -145,7 +172,7 @@
             font-size: 12px;
             font-weight: bold;
             color: rgba(255,255,255,0.9);
-            margin-top: 20px;
+            margin-top: 15px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             letter-spacing: 1px;
         }
@@ -160,28 +187,32 @@
 <body>
 
 <div class="content">
-    <div class="title">Ну..</div>
+    <div class="top-block">
+        <div class="title">Ну, за...</div>
+    </div>
 
-    <!-- Подложка для праздников -->
-    <div class="holiday-card" id="holidayCard">
-        <div id="holidayContent">
-            <div class="holiday-name">Загрузка...</div>
+    <div class="center-block">
+        <div class="holiday-card" id="holidayCard">
+            <div id="holidayContent">
+                <div class="holiday-name">Загрузка...</div>
+            </div>
         </div>
     </div>
 
-    <button class="refresh-btn" id="refreshBtn">
-        <span>🍺</span> Давай по новой, Гоша, все х*ня
-    </button>
-
-    <div class="avatars-container" id="avatarsContainer"></div>
-    <div class="footer-note">
-        БОССЫ ПИВНОЙ КАЧАЛКИ
+    <div class="bottom-block">
+        <button class="refresh-btn" id="refreshBtn">
+            <span>🍺</span> Давай по новой, Гоша, все х*ня
+        </button>
+        <div class="avatars-container" id="avatarsContainer"></div>
+        <div class="footer-note">
+            БОССЫ ПИВНОЙ КАЧАЛКИ
+        </div>
     </div>
 </div>
 
 <script>
     // ========== ВАША ФОНОВАЯ КАРТИНКА ==========
-    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/C00tRE96HCIyorJfkpc3O2_7_N0-LdtdXyLsYzE3BOstMTuvNoZaqnqLR1EWRqNh14O50lq-l_BQvCXgaVBv0_Pa.jpg";
+    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn2.jpg";
     // ============================================
 
     // Устанавливаем фон
