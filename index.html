@@ -38,73 +38,60 @@
             z-index: -1;
         }
 
-        .card {
-            background: rgba(30, 30, 40, 0.7);
-            backdrop-filter: blur(15px);
-            border-radius: 48px;
-            padding: 30px 25px;
-            max-width: 550px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Основной контент */
+        .content {
             position: relative;
             z-index: 2;
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
         }
 
         .title {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 800;
             background: linear-gradient(135deg, #FFB6C1, #FF6B6B);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 5px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .sub {
-            font-size: 14px;
-            color: #e0e0e0;
-            margin-bottom: 25px;
-        }
-
-        .holiday-box {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 32px;
-            padding: 20px 15px;
-            margin-bottom: 25px;
-            min-height: 150px;
+        /* Подложка для праздников */
+        .holiday-card {
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
             border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .holiday-name {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: bold;
             color: #FFD966;
             word-break: break-word;
             line-height: 1.4;
-            margin-bottom: 10px;
-        }
-
-        .holiday-desc {
-            font-size: 13px;
-            color: #ddd;
         }
 
         .refresh-btn {
             background: #FF6B6B;
             border: none;
-            padding: 10px 24px;
+            padding: 12px 28px;
             border-radius: 40px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
             color: white;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .refresh-btn:hover {
@@ -124,13 +111,13 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            background-color: #2c3e50;
+            background-color: rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255,255,255,0.5);
+            border: 2px solid rgba(255,255,255,0.6);
             transition: transform 0.2s ease;
             animation: float 3s ease-in-out infinite;
         }
@@ -155,9 +142,12 @@
         }
 
         .footer-note {
-            font-size: 9px;
-            color: #ccc;
-            margin-top: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: rgba(255,255,255,0.9);
+            margin-top: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
 
         @keyframes float {
@@ -169,18 +159,18 @@
 </head>
 <body>
 
-<div class="card">
+<div class="content">
     <div class="title">Ну..</div>
-    <div class="sub">сегодня такой праздник</div>
 
-    <div class="holiday-box" id="holidayBox">
+    <!-- Подложка для праздников -->
+    <div class="holiday-card" id="holidayCard">
         <div id="holidayContent">
-            Загрузка...
+            <div class="holiday-name">Загрузка...</div>
         </div>
     </div>
 
     <button class="refresh-btn" id="refreshBtn">
-        <span>🎲</span> Давай по новой, Гоша, все х*ня
+        <span>🍺</span> Давай по новой, Гоша, все х*ня
     </button>
 
     <div class="avatars-container" id="avatarsContainer"></div>
@@ -190,13 +180,13 @@
 </div>
 
 <script>
-    // ========== ФОНОВАЯ КАРТИНКА ==========
+    // ========== ВАША ФОНОВАЯ КАРТИНКА ==========
     const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/C00tRE96HCIyorJfkpc3O2_7_N0-LdtdXyLsYzE3BOstMTuvNoZaqnqLR1EWRqNh14O50lq-l_BQvCXgaVBv0_Pa.jpg";
-    // ====================================================
+    // ============================================
 
     // Устанавливаем фон
     document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
-    //document.body.style.backgroundSize = "cover"; //
+    document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
 
     // База праздников
@@ -252,8 +242,7 @@
         
         if (!holidaysList || holidaysList.length === 0) {
             return {
-                name: "Сегодня особенных праздников нет",
-                description: "Но ты всегда можешь придумать свой! ✨"
+                name: "Сегодня особенных праздников нет, но пиво всегда есть! 🍺"
             };
         }
         
@@ -264,17 +253,15 @@
         currentHolidayIndex = randomIndex;
         
         return {
-            name: `🎉 ${holidaysList[randomIndex]}`,
-            description: `Праздник, который стоит отметить!`
+            name: `🍺 ${holidaysList[randomIndex]}`
         };
     }
 
     function updateHoliday() {
-        const contentDiv = document.getElementById('holidayContent');
         const holiday = getRandomHoliday();
-        contentDiv.innerHTML = `
+        const container = document.getElementById('holidayContent');
+        container.innerHTML = `
             <div class="holiday-name">${escapeHtml(holiday.name)}</div>
-            <div class="holiday-desc">${escapeHtml(holiday.description)}</div>
         `;
     }
 
@@ -323,8 +310,6 @@
     if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
-        Telegram.WebApp.setHeaderColor('#1a2a3a');
-        Telegram.WebApp.setBackgroundColor('#1a2a3a');
     }
 </script>
 </body>
