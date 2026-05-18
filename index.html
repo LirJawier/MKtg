@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Праздник дня — Ну..</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 40px 30px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .title {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFB6C1, #FF6B6B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .sub {
+            font-size: 18px;
+            color: #b0c4de;
+            margin-bottom: 40px;
+            border-bottom: 1px dashed #3a5a6e;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .holiday-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 32px;
+            padding: 25px 20px;
+            margin-bottom: 35px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .holiday-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD966;
+            word-break: break-word;
+            line-height: 1.3;
+        }
+
+        .holiday-desc {
+            font-size: 16px;
+            color: #9cb8d4;
+            margin-top: 15px;
+        }
+
+        .refresh-btn {
+            background: #FF6B6B;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .refresh-btn:hover {
+            background: #ff5252;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .footer-note {
+            font-size: 12px;
+            color: #608aac;
+            margin-top: 30px;
+        }
+
+        .loader {
+            border: 3px solid #3a5a6e;
+            border-top: 3px solid #FFB6C1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 30px 20px; }
+            .title { font-size: 56px; }
+            .holiday-name { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="title">Ну..</div>
+    <div class="sub">праздник дня</div>
+
+    <div class="holiday-box" id="holidayBox">
+        <div id="holidayContent">
+            <div class="loader"></div>
+            <div class="holiday-desc" style="margin-top: 15px;">Ищем повод для радости...</div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" id="refreshBtn">
+        <span>🔄</span> Обновить
+    </button>
+    <div class="footer-note">
+        ✨ Источник: Nager.Date
+    </div>
+</div>
+
+<script>
+    // Функция получения праздника (универсальная)
+    async function fetchHoliday(countryCode = 'RU') {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
+        
+        const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            const holidays = await response.json();
+            const todaysHoliday = holidays.find(h => h.date === todayStr);
+            
+            if (todaysHoliday) {
+                return {
+                    name: todaysHoliday.localName || todaysHoliday.name,
+                    desc: `Официальный праздник в ${getCountryName(countryCode)}`
+                };
+            } else {
+                return {
+                    name: "Сегодня нет официальных праздников ✨",
+                    desc: "Но это не повод не радоваться! Создай свой маленький праздник 🎈"
+                };
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке:', error);
+            return {
+                name: "Не удалось загрузить праздник",
+                desc: "Проверь соединение или попробуй позже 🌐"
+            };
+        }
+    }
+
+    function getCountryName(code) {
+        const names = { 'RU': 'России', 'US': 'США', 'GB': 'Великобритании', 'DE': 'Германии', 'FR': 'Франции', 'IT': 'Италии', 'ES': 'Испании', 'BY': 'Беларуси', 'KZ': 'Казахстана', 'UA': 'Украине', 'CN': 'Китае', 'JP': 'Японии' };
+        return names[code] || code;
+    }
+
+    async function updateHolidayUI() {
+        const contentDiv = document.getElementById('holidayContent');
+        // Показываем лоадер
+        contentDiv.innerHTML = `<div class="loader"></div><div class="holiday-desc" style="margin-top:15px;">Загружаем праздник...</div>`;
+
+        const holidayData = await fetchHoliday('RU');
+
+        contentDiv.innerHTML = `
+            <div class="holiday-name">${escapeHtml(holidayData.name)}</div>
+            <div class="holiday-desc">${escapeHtml(holidayData.desc)}</div>
+        `;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Первая загрузка
+    updateHolidayUI();
+
+    // Вешаем обработчик на кнопку
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        updateHolidayUI();
+    });
+
+    // Классный эффект при загрузке через WebApp (Telegram)
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+    }
+</script>
+</body>
+</html>
