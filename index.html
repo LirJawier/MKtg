@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Случайный праздник — Ну..</title>
+    <title>Праздник дня — Ну..</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,7 @@
 
         .card {
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border-radius: 48px;
             padding: 40px 30px;
             max-width: 550px;
@@ -54,7 +54,7 @@
             border-radius: 32px;
             padding: 25px 20px;
             margin-bottom: 20px;
-            min-height: 200px;
+            min-height: 180px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -73,13 +73,6 @@
             margin-top: 12px;
         }
 
-        .holiday-country {
-            font-size: 13px;
-            color: #FFB6C1;
-            margin-top: 15px;
-            font-weight: 500;
-        }
-
         .refresh-btn {
             background: #FF6B6B;
             border: none;
@@ -93,6 +86,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            margin-top: 10px;
         }
 
         .refresh-btn:hover {
@@ -105,160 +99,126 @@
             color: #608aac;
             margin-top: 20px;
         }
-
-        .loader {
-            border: 3px solid #3a5a6e;
-            border-top: 3px solid #FFB6C1;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
 
 <div class="card">
     <div class="title">Ну..</div>
-    <div class="sub">сегодня где-то праздник</div>
+    <div class="sub">сегодня такой праздник</div>
 
     <div class="holiday-box" id="holidayBox">
         <div id="holidayContent">
-            <div class="loader"></div>
-            <div class="holiday-desc">Выбираем страну и праздник...</div>
+            Загрузка...
         </div>
     </div>
 
     <button class="refresh-btn" id="refreshBtn">
-        <span>🌍</span> Случайная страна и праздник
+        <span>🎲</span> Другой праздник
     </button>
     <div class="footer-note">
-        📅 Источник: Calendarific • праздники со всего мира
+        📅 Ваш персональный календарь праздников
     </div>
 </div>
 
 <script>
-    // ⚠️ ВСТАВЬТЕ ВАШ API-КЛЮЧ ОТ CALENDARIFIC
-    const CALENDARIFIC_KEY = "zFoIOvM3hXj4CXcGvwzxsoUhOWhdnmkf";
-    
-    const countriesList = [
-        { code: "RU", name: "Россия" },
-        { code: "US", name: "США" },
-        { code: "GB", name: "Великобритания" },
-        { code: "DE", name: "Германия" },
-        { code: "FR", name: "Франция" },
-        { code: "IT", name: "Италия" },
-        { code: "ES", name: "Испания" },
-        { code: "CA", name: "Канада" },
-        { code: "AU", name: "Австралия" },
-        { code: "BR", name: "Бразилия" },
-        { code: "IN", name: "Индия" },
-        { code: "JP", name: "Япония" },
-        { code: "KR", name: "Южная Корея" },
-        { code: "MX", name: "Мексика" },
-        { code: "ZA", name: "ЮАР" },
-        { code: "NL", name: "Нидерланды" },
-        { code: "SE", name: "Швеция" },
-        { code: "NO", name: "Норвегия" }
-    ];
+    // Полная база праздников
+    const holidaysData = {
+        "18.05": [
+            "Международный день музеев",
+            "Арина Капустница (Рассадница)",
+            "Всемирный день вакцины против СПИДа",
+            "День памяти жертв депортации народов Крыма",
+            "День памяти иконы «Неупиваемая чаша»",
+            "День без грязной посуды",
+            "День рождения майского жжжжука",
+            "День Розовой Пантеры",
+            "День сырного суфле"
+        ],
+        "19.05": [
+            "День пионерии",
+            "День рождения Кубика Рубика",
+            "Иов Горошник",
+            "День конной авиации",
+            "День подразделений служебно-боевой подготовки МВД РФ",
+            "День русской печи",
+            "День пищевой революции",
+            "День парусов на горизонте",
+            "Всемирный день борьбы с воспалительными заболеваниями кишечника",
+            "Всемирный день борьбы с гепатитом С",
+            "День торта «Devil`s Food Cake»"
+        ],
+        "20.05": [
+            "Всемирный день врача-травматолога",
+            "Всемирный день метрологии",
+            "День рождения джинсов",
+            "Купальница",
+            "Всемирный день пчел",
+            "День Волги",
+            "Европейский день моря",
+            "День миллионера",
+            "День собранной клубники",
+            "День ветряных вертушек",
+            "Праздник разливаний",
+            "День пирога «Киш Лорен»"
+        ],
+        "21.05": [
+            "День военного переводчика",
+            "День инвентаризатора (День работника БТИ)",
+            "День полярника",
+            "День Тихоокеанского флота ВМФ России",
+            "Вознесение Господне",
+            "День защиты от безработицы",
+            "Всемирный день культурного разнообразия во имя диалога и развития",
+            "Международный день космоса",
+            "Иван Долгий",
+            "День работников культуры и искусства – Казахстан",
+            "День официантов и официанток",
+            "День музы и вдохновения",
+            "День обмена талисманами",
+            "День клубники со сливками"
+        ]
+    };
 
-    let lastCountryIndex = -1;
+    let currentHolidayIndex = -1;
 
-    async function getRandomHoliday() {
-        let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * countriesList.length);
-        } while (randomIndex === lastCountryIndex && countriesList.length > 1);
-        lastCountryIndex = randomIndex;
-        
-        const country = countriesList[randomIndex];
-        
+    function getTodayKey() {
         const today = new Date();
-        const year = today.getFullYear();
-        
-        // Запрашиваем праздники за ВЕСЬ год, а не за конкретный день
-        const url = `https://calendarific.com/api/v2/holidays?api_key=${CALENDARIFIC_KEY}&country=${country.code}&year=${year}`;
-        
-        try {
-            console.log(`Запрос к API для ${country.name}: ${url}`);
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data.meta && data.meta.code === 200) {
-                let holidays = data.response.holidays;
-                
-                if (holidays && holidays.length > 0) {
-                    // Фильтруем праздники, которые ещё не прошли
-                    const todayStr = today.toISOString().split('T')[0];
-                    const upcomingHolidays = holidays.filter(h => h.date.iso >= todayStr);
-                    
-                    if (upcomingHolidays.length > 0) {
-                        // Сортируем по дате и берём ближайший
-                        upcomingHolidays.sort((a, b) => a.date.iso.localeCompare(b.date.iso));
-                        const nearestHoliday = upcomingHolidays[0];
-                        
-                        // Форматируем дату
-                        const holidayDate = new Date(nearestHoliday.date.iso);
-                        const formattedDate = holidayDate.toLocaleDateString('ru-RU');
-                        
-                        let description = nearestHoliday.description || `Праздник в ${country.name}`;
-                        if (nearestHoliday.date.iso === todayStr) {
-                            description = `Сегодня! ${description}`;
-                        } else {
-                            description = `${formattedDate} — ${description}`;
-                        }
-                        
-                        return {
-                            success: true,
-                            name: nearestHoliday.name,
-                            description: description,
-                            country: country.name
-                        };
-                    }
-                }
-            }
-            
-            // Если праздников нет, показываем сообщение
-            return {
-                success: true,
-                name: "Ближайших праздников пока нет",
-                description: `Но в ${country.name} всегда есть повод для радости! ✨`,
-                country: country.name
-            };
-            
-        } catch (error) {
-            console.error('Ошибка API:', error);
-            const localHolidays = [
-                { name: "Международный день счастья", desc: "Улыбнись и поделись радостью! 😊" },
-                { name: "День хорошего настроения", desc: "Сегодня точно будет отличный день! 🌈" },
-                { name: "Всемирный день дружбы", desc: "Напиши старым друзьям 👫" }
-            ];
-            const randomLocal = Math.floor(Math.random() * localHolidays.length);
-            return {
-                success: true,
-                name: localHolidays[randomLocal].name,
-                description: localHolidays[randomLocal].desc,
-                country: "мире"
-            };
-        }
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${month}.${day}`;
     }
 
-    async function updateHoliday() {
-        const contentDiv = document.getElementById('holidayContent');
-        contentDiv.innerHTML = `<div class="loader"></div><div class="holiday-desc">Выбираем случайную страну...</div>`;
+    function getRandomHoliday() {
+        const todayKey = getTodayKey();
+        const holidaysList = holidaysData[todayKey];
         
-        const holiday = await getRandomHoliday();
+        if (!holidaysList || holidaysList.length === 0) {
+            return {
+                name: "Сегодня особенных праздников нет",
+                description: "Но ты всегда можешь придумать свой! ✨"
+            };
+        }
+        
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * holidaysList.length);
+        } while (randomIndex === currentHolidayIndex && holidaysList.length > 1);
+        currentHolidayIndex = randomIndex;
+        
+        return {
+            name: `🎉 ${holidaysList[randomIndex]}`,
+            description: `Праздник, который стоит отметить!`
+        };
+    }
+
+    function updateHoliday() {
+        const contentDiv = document.getElementById('holidayContent');
+        const holiday = getRandomHoliday();
         
         contentDiv.innerHTML = `
-            <div class="holiday-name">🎉 ${escapeHtml(holiday.name)}</div>
+            <div class="holiday-name">${escapeHtml(holiday.name)}</div>
             <div class="holiday-desc">${escapeHtml(holiday.description)}</div>
-            <div class="holiday-country">🌍 ${escapeHtml(holiday.country)}</div>
         `;
     }
 
@@ -269,14 +229,11 @@
         return div.innerHTML;
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        updateHoliday();
-    });
-    
-    document.getElementById('refreshBtn').addEventListener('click', function() {
-        updateHoliday();
-    });
+    // Запуск
+    updateHoliday();
+    document.getElementById('refreshBtn').addEventListener('click', updateHoliday);
 
+    // Telegram Web App
     if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
