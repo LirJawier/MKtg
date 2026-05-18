@@ -144,7 +144,7 @@
 </div>
 
 <script>
-    // ВСТАВЬТЕ ВАШ API-КЛЮЧ ОТ CALENDARIFIC
+    // ⚠️ ВСТАВЬТЕ ВАШ API-КЛЮЧ ОТ CALENDARIFIC
     const CALENDARIFIC_KEY = "ВАШ_API_КЛЮЧ";
     
     // Список стран с кодами и названиями
@@ -160,24 +160,7 @@
         { code: "AU", name: "Австралия" },
         { code: "BR", name: "Бразилия" },
         { code: "IN", name: "Индия" },
-        { code: "JP", name: "Япония" },
-        { code: "KR", name: "Южная Корея" },
-        { code: "MX", name: "Мексика" },
-        { code: "ZA", name: "ЮАР" },
-        { code: "EG", name: "Египет" },
-        { code: "TR", name: "Турция" },
-        { code: "NL", name: "Нидерланды" },
-        { code: "SE", name: "Швеция" },
-        { code: "NO", name: "Норвегия" },
-        { code: "DK", name: "Дания" },
-        { code: "FI", name: "Финляндия" },
-        { code: "PL", name: "Польша" },
-        { code: "CZ", name: "Чехия" },
-        { code: "AT", name: "Австрия" },
-        { code: "CH", name: "Швейцария" },
-        { code: "BE", name: "Бельгия" },
-        { code: "PT", name: "Португалия" },
-        { code: "GR", name: "Греция" }
+        { code: "JP", name: "Япония" }
     ];
 
     let lastCountryIndex = -1;
@@ -197,10 +180,10 @@
         const month = today.getMonth() + 1;
         const day = today.getDate();
         
+        // Telegram Web App требует HTTPS, Calendarific работает через HTTPS
         const url = `https://calendarific.com/api/v2/holidays?api_key=${CALENDARIFIC_KEY}&country=${country.code}&year=${year}&month=${month}&day=${day}`;
         
         try {
-            console.log(`Запрашиваю праздники для ${country.name}...`);
             const response = await fetch(url);
             const data = await response.json();
             
@@ -218,19 +201,32 @@
                         country: country.name
                     };
                 } else {
-                    // Если в этой стране нет праздников сегодня, пробуем другую
-                    console.log(`В ${country.name} нет праздников сегодня, пробую другую...`);
-                    return getRandomHoliday();
+                    // Если нет праздников сегодня, берём следующий доступный
+                    return {
+                        success: true,
+                        name: "Сегодня нет официальных праздников",
+                        description: `Но ты всегда можешь создать свой праздник в ${country.name}! ✨`,
+                        country: country.name
+                    };
                 }
             } else {
                 throw new Error('API вернул ошибку');
             }
         } catch (error) {
             console.error('Ошибка API:', error);
+            // Возвращаем случайный праздник из локальной базы
+            const localHolidays = [
+                { name: "Международный день счастья", desc: "Улыбнись и поделись радостью! 😊" },
+                { name: "День хорошего настроения", desc: "Сегодня точно будет отличный день! 🌈" },
+                { name: "Всемирный день дружбы", desc: "Напиши старым друзьям 👫" },
+                { name: "День спонтанных решений", desc: "Сделай что-то неожиданное ✨" }
+            ];
+            const randomLocal = Math.floor(Math.random() * localHolidays.length);
+            const localHoliday = localHolidays[randomLocal];
             return {
                 success: true,
-                name: "Сегодня праздник!",
-                description: "Наш генератор праздников временно не работает, но ты всегда можешь создать свой праздник ✨",
+                name: localHoliday.name,
+                description: localHoliday.desc,
                 country: "мире"
             };
         }
@@ -256,11 +252,13 @@
         return div.innerHTML;
     }
 
-    // Загрузка при старте
-    updateHoliday();
+    // Ждём полной загрузки страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        updateHoliday();
+    });
     
     // При нажатии на кнопку
-    document.getElementById('refreshBtn').addEventListener('click', () => {
+    document.getElementById('refreshBtn').addEventListener('click', function() {
         updateHoliday();
     });
 
@@ -268,6 +266,9 @@
     if (window.Telegram && Telegram.WebApp) {
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
+        // Устанавливаем цвет шапки Telegram в тон приложения
+        Telegram.WebApp.setHeaderColor('#1a2a3a');
+        Telegram.WebApp.setBackgroundColor('#1a2a3a');
     }
 </script>
 </body>
