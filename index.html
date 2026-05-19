@@ -75,17 +75,18 @@
             position: relative;
         }
 
-        .holiday-card {
-    background: rgba(0, 0, 0, 0.85);    /* Усилил затемнение, чтобы компенсировать убирание размытия */
-    /* backdrop-filter: blur(12px); */   /* Убрал — было проблемой на Android */
-    border-radius: 0;
-    padding: 25px 20px;
-    width: 100%;
-    border: 2px solid #FFD966;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    text-align: center;
-    position: relative;
-}
+        .holiday-card::before {
+            content: "Ну, за...";
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFD966;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
 
         .holiday-name {
             font-size: 26px;
@@ -269,7 +270,7 @@
 </div>
 
 <script>
-    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn6.jpeg";
+    const MY_BACKGROUND = "https://raw.githubusercontent.com/ВАШ_АККАУНТ/НАЗВАНИЕ_РЕПОЗИТОРИЯ/main/имя_файла.jpg";
     document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
@@ -281,7 +282,7 @@
         { username: "sokolovpeter", fallbackImage: "" },   // Telegram + своя картинка
         { username: "oldti", fallbackImage: "" },          // Telegram + своя картинка
         { username: "RNFRI", fallbackImage: "" },          // Telegram + своя картинка
-        { username: "BOSS", fallbackImage: "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/dan.jpg" } // Босс — своя картинка
+        { username: "BOSS", fallbackImage: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/boss.jpg" } // Босс — своя картинка
     ];
 
     function getAvatarElement(contact) {
