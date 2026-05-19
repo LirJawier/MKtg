@@ -63,10 +63,11 @@
             margin-bottom: 20px;
         }
 
+        /* Подложка с прямыми углами */
         .holiday-card {
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
-            border-radius: 40px;
+            border-radius: 0;
             padding: 25px 20px;
             width: 100%;
             border: 1px solid rgba(255,255,255,0.2);
@@ -75,6 +76,7 @@
             position: relative;
         }
 
+        /* "Ну, за..." внутри подложки */
         .holiday-card::before {
             content: "Ну, за...";
             position: absolute;
@@ -88,6 +90,7 @@
             letter-spacing: 1px;
         }
 
+        /* Текст праздника — золотой */
         .holiday-name {
             font-size: 26px;
             font-weight: bold;
@@ -103,14 +106,15 @@
             display: inline-block;
         }
 
+        /* Кнопка с прямыми углами */
         .refresh-btn {
             background: #2c2c2c;
             border: 2px solid #FFD966;
+            border-radius: 0;
             padding: 12px 28px;
-            border-radius: 40px;
             font-weight: bold;
             font-size: 15px;
-            color: #FFF8E7;
+            color: #FFD966;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
@@ -126,6 +130,7 @@
             transform: scale(1.02);
         }
 
+        /* Аватары */
         .avatars-container {
             display: flex;
             justify-content: center;
@@ -167,10 +172,11 @@
             text-transform: uppercase;
         }
 
+        /* Футер — золотой текст */
         .footer-note {
             font-size: 12px;
             font-weight: bold;
-            color: rgba(255,255,255,0.9);
+            color: #FFD966;
             margin-top: 15px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             letter-spacing: 1px;
@@ -206,7 +212,7 @@
 </div>
 
 <script>
-    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn4.jpg";
+    const MY_BACKGROUND = "https://raw.githubusercontent.com/ВАШ_АККАУНТ/НАЗВАНИЕ_РЕПОЗИТОРИЯ/main/имя_файла.jpg";
     document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
