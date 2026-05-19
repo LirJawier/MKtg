@@ -181,7 +181,6 @@
             letter-spacing: 1px;
         }
 
-        /* Стили для модального окна */
         .modal {
             display: none;
             position: fixed;
@@ -263,7 +262,6 @@
     </div>
 </div>
 
-<!-- Модальное окно -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-text" id="modalText">здесь могла быть реклама Босса</div>
@@ -272,71 +270,69 @@
 </div>
 
 <script>
-    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn4.jpg";
+    const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn5.jpeg;
     document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
 
-    // ========== НАСТРОЙКА АВАТАРОВ ==========
-    // Здесь можно указать свои картинки для каждого кружка
-    // Если картинка не загрузится, будет показана первая буква имени или "?"
-    
-    const CUSTOM_AVATARS = [
-        {
-            name: "makoklyuy",
-            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/makoklyuy.jpg"
-        },
-        {
-            name: "sokolovpeter",
-            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/sokolovpeter.jpg"
-        },
-        {
-            name: "oldti",
-            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/oldti.jpg"
-        },
-        {
-            name: "RNFRI",
-            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/RNFRI.jpg"
-        },
-        {
-            name: "BOSS",
-            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/boss.jpg"
-        }
+    // ========== НАСТРОЙКА КОНТАКТОВ И ЗАГЛУШЕК ==========
+    // Для первых 4 — Telegram username, для 5-го — своя картинка (или оставить пустым)
+    const contacts = [
+        { username: "makoklyuy", fallbackImage: "" },      // Telegram + своя картинка (опционально)
+        { username: "sokolovpeter", fallbackImage: "" },   // Telegram + своя картинка
+        { username: "oldti", fallbackImage: "" },          // Telegram + своя картинка
+        { username: "RNFRI", fallbackImage: "" },          // Telegram + своя картинка
+        { username: "BOSS", fallbackImage: "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/dan.jpg" } // Босс — своя картинка
     ];
 
-    // Функция для получения элемента аватара
-    function getAvatarElement(avatarConfig) {
+    function getAvatarElement(contact) {
         const container = document.createElement('div');
         container.className = 'avatar-circle';
         container.style.cursor = 'pointer';
         
-        const img = document.createElement('img');
-        img.src = avatarConfig.imageUrl;
-        img.alt = avatarConfig.name;
+        // Для босса (5-й) или если указана своя картинка
+        if (contact.fallbackImage && contact.fallbackImage.trim() !== "") {
+            const img = document.createElement('img');
+            img.src = contact.fallbackImage;
+            img.alt = contact.username;
+            img.onerror = () => {
+                // Если своя картинка не загрузилась — показываем букву
+                const placeholder = document.createElement('div');
+                placeholder.className = 'avatar-placeholder';
+                placeholder.textContent = contact.username.charAt(0).toUpperCase();
+                container.innerHTML = '';
+                container.appendChild(placeholder);
+            };
+            container.appendChild(img);
+        } 
+        // Для обычных пользователей — сначала Telegram, потом заглушка
+        else {
+            const cleanName = contact.username.replace('@', '');
+            const img = document.createElement('img');
+            img.src = `https://unavatar.io/telegram/${cleanName}`;
+            img.alt = contact.username;
+            
+            img.onerror = () => {
+                // Если Telegram-аватар не загрузился — показываем букву
+                const placeholder = document.createElement('div');
+                placeholder.className = 'avatar-placeholder';
+                placeholder.textContent = cleanName.charAt(0).toUpperCase();
+                container.innerHTML = '';
+                container.appendChild(placeholder);
+            };
+            
+            container.appendChild(img);
+        }
         
-        img.onerror = () => {
-            // Если картинка не загрузилась, показываем первую букву имени
-            const placeholder = document.createElement('div');
-            placeholder.className = 'avatar-placeholder';
-            const letter = avatarConfig.name.charAt(0).toUpperCase();
-            placeholder.textContent = letter === 'B' ? '?' : letter;
-            container.innerHTML = '';
-            container.appendChild(placeholder);
-        };
-        
-        container.appendChild(img);
-        
-        // Добавляем обработчик клика
         container.addEventListener('click', showModal);
-        
         return container;
     }
 
     function loadAvatars() {
         const container = document.getElementById('avatarsContainer');
         container.innerHTML = '';
-        CUSTOM_AVATARS.forEach(avatarConfig => {
-            container.appendChild(getAvatarElement(avatarConfig));
+        contacts.forEach(contact => {
+            container.appendChild(getAvatarElement(contact));
         });
     }
 
@@ -463,7 +459,6 @@
         return div.innerHTML;
     }
 
-    // Настройка модального окна
     document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
     window.addEventListener('click', (e) => {
         const modal = document.getElementById('modal');
@@ -472,7 +467,6 @@
         }
     });
 
-    // Запуск
     loadAvatars();
     updateHoliday();
     document.getElementById('refreshBtn').addEventListener('click', updateHoliday);
