@@ -63,7 +63,6 @@
             margin-bottom: 20px;
         }
 
-        /* Подложка с оригинальным цветом */
         .holiday-card {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
@@ -103,7 +102,6 @@
             display: inline-block;
         }
 
-        /* Кнопка с оригинальным цветом */
         .refresh-btn {
             background: #2c2c2c;
             border: 2px solid #FFD966;
@@ -147,6 +145,12 @@
             border: 2px solid rgba(255,255,255,0.6);
             transition: transform 0.2s ease;
             animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .avatar-circle:hover {
+            transform: scale(1.05);
+            border-color: #FFD966;
         }
 
         .avatar-circle img {
@@ -175,6 +179,59 @@
             margin-top: 15px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             letter-spacing: 1px;
+        }
+
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #2c2c2c;
+            border: 2px solid #FFD966;
+            border-radius: 0;
+            padding: 30px 40px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFD966;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .modal-close {
+            background: #2c2c2c;
+            border: 2px solid #FFD966;
+            border-radius: 0;
+            padding: 8px 24px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #FFD966;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .modal-close:hover {
+            background: #3a3a3a;
+            border-color: #ffec80;
+            transform: scale(1.02);
         }
 
         @keyframes float {
@@ -206,12 +263,95 @@
     </div>
 </div>
 
+<!-- Модальное окно -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-text" id="modalText">здесь могла быть реклама Босса</div>
+        <button class="modal-close" id="modalCloseBtn">Закрыть</button>
+    </div>
+</div>
+
 <script>
     const MY_BACKGROUND = "https://raw.githubusercontent.com/LirJawier/MKtg/refs/heads/main/krsn4.jpg";
     document.body.style.backgroundImage = `url('${MY_BACKGROUND}')`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
 
+    // ========== НАСТРОЙКА АВАТАРОВ ==========
+    // Здесь можно указать свои картинки для каждого кружка
+    // Если картинка не загрузится, будет показана первая буква имени или "?"
+    
+    const CUSTOM_AVATARS = [
+        {
+            name: "makoklyuy",
+            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/makoklyuy.jpg"
+        },
+        {
+            name: "sokolovpeter",
+            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/sokolovpeter.jpg"
+        },
+        {
+            name: "oldti",
+            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/oldti.jpg"
+        },
+        {
+            name: "RNFRI",
+            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/RNFRI.jpg"
+        },
+        {
+            name: "BOSS",
+            imageUrl: "https://raw.githubusercontent.com/ВАШ_АККАУНТ/РЕПОЗИТОРИЙ/main/avatars/boss.jpg"
+        }
+    ];
+
+    // Функция для получения элемента аватара
+    function getAvatarElement(avatarConfig) {
+        const container = document.createElement('div');
+        container.className = 'avatar-circle';
+        container.style.cursor = 'pointer';
+        
+        const img = document.createElement('img');
+        img.src = avatarConfig.imageUrl;
+        img.alt = avatarConfig.name;
+        
+        img.onerror = () => {
+            // Если картинка не загрузилась, показываем первую букву имени
+            const placeholder = document.createElement('div');
+            placeholder.className = 'avatar-placeholder';
+            const letter = avatarConfig.name.charAt(0).toUpperCase();
+            placeholder.textContent = letter === 'B' ? '?' : letter;
+            container.innerHTML = '';
+            container.appendChild(placeholder);
+        };
+        
+        container.appendChild(img);
+        
+        // Добавляем обработчик клика
+        container.addEventListener('click', showModal);
+        
+        return container;
+    }
+
+    function loadAvatars() {
+        const container = document.getElementById('avatarsContainer');
+        container.innerHTML = '';
+        CUSTOM_AVATARS.forEach(avatarConfig => {
+            container.appendChild(getAvatarElement(avatarConfig));
+        });
+    }
+
+    function showModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+    }
+
+    // ----- ОСТАЛЬНАЯ ЛОГИКА ПРАЗДНИКОВ -----
+    
     function getEmojiForHoliday(holidayName) {
         const lowerName = holidayName.toLowerCase();
         
@@ -316,35 +456,6 @@
         container.innerHTML = `<div class="holiday-name">${emojiHtml} ${escapeHtml(holiday.name)}</div>`;
     }
 
-    const contacts = ['@makoklyuy', '@sokolovpeter', '@oldti', '@RNFRI'];
-    
-    function getAvatarElement(username) {
-        const cleanName = username.replace('@', '');
-        const container = document.createElement('div');
-        container.className = 'avatar-circle';
-        
-        const img = document.createElement('img');
-        img.src = `https://unavatar.io/telegram/${cleanName}`;
-        img.alt = username;
-        img.onerror = () => {
-            const placeholder = document.createElement('div');
-            placeholder.className = 'avatar-placeholder';
-            placeholder.textContent = cleanName[0] ? cleanName[0].toUpperCase() : '?';
-            container.innerHTML = '';
-            container.appendChild(placeholder);
-        };
-        container.appendChild(img);
-        return container;
-    }
-
-    function loadAvatars() {
-        const container = document.getElementById('avatarsContainer');
-        container.innerHTML = '';
-        contacts.forEach(contact => {
-            container.appendChild(getAvatarElement(contact));
-        });
-    }
-
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -352,6 +463,16 @@
         return div.innerHTML;
     }
 
+    // Настройка модального окна
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('modal');
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Запуск
     loadAvatars();
     updateHoliday();
     document.getElementById('refreshBtn').addEventListener('click', updateHoliday);
